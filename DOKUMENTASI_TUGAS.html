@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>Dokumentasi Data Analytics ReAct Agent</title>
+  <style>
+    @page { size: A4 portrait; margin: 16mm 16mm 15mm; }
+    @page landscape { size: A4 landscape; margin: 12mm; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #172033;
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.48;
+    }
+    h1, h2, h3 { color: #173b66; page-break-after: avoid; }
+    h1 { font-size: 25pt; line-height: 1.15; margin: 0 0 8mm; }
+    h2 { font-size: 17pt; border-bottom: 2px solid #3b82c4; padding-bottom: 2mm; margin: 0 0 5mm; }
+    h3 { font-size: 12.5pt; margin: 5mm 0 2mm; }
+    p { margin: 0 0 3mm; }
+    ul, ol { margin: 2mm 0 4mm 6mm; padding-left: 5mm; }
+    li { margin-bottom: 1.5mm; }
+    .cover {
+      min-height: 255mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      page-break-after: always;
+      background: linear-gradient(145deg, #eef6ff, #ffffff 55%, #e8f5f0);
+      border: 1px solid #d5e2ef;
+      padding: 20mm;
+    }
+    .cover .eyebrow { color: #3478b9; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+    .cover .subtitle { font-size: 15pt; color: #42556d; margin-bottom: 18mm; }
+    .cover .meta { border-top: 1px solid #b8c8d8; padding-top: 7mm; color: #53657a; }
+    .page { page-break-before: always; }
+    .landscape-page { page: landscape; page-break-before: always; }
+    .callout {
+      background: #edf6ff;
+      border-left: 4px solid #3478b9;
+      padding: 4mm 5mm;
+      margin: 4mm 0;
+    }
+    .warning { background: #fff7e6; border-left-color: #e49b27; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+    .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin: 4mm 0; }
+    .metric { background: #f5f8fc; border: 1px solid #d7e1eb; border-radius: 5px; padding: 4mm; }
+    .metric strong { display: block; color: #1f5f96; font-size: 16pt; }
+    .flow-table { margin: 6mm 0; table-layout: fixed; }
+    .flow-table td { background: #eff6fc; border: 1px solid #b9d1e6; padding: 4mm 2mm; text-align: center; font-weight: 600; }
+    .flow-table td.arrow { width: 7mm; background: white; border: 0; color: #3478b9; font-size: 16pt; padding: 0; }
+    .hard-break { height: 0; page-break-after: always; break-after: page; }
+    table { width: 100%; border-collapse: collapse; margin: 3mm 0 5mm; font-size: 9.2pt; }
+    th { background: #265f92; color: white; text-align: left; }
+    th, td { border: 1px solid #cbd8e5; padding: 2.2mm 2.5mm; }
+    tr:nth-child(even) td { background: #f4f8fb; }
+    td.num, th.num { text-align: right; }
+    code { font-family: Consolas, monospace; }
+    pre {
+      background: #172033;
+      color: #e8eef5;
+      border-radius: 5px;
+      padding: 4mm;
+      font: 8.7pt/1.45 Consolas, monospace;
+      white-space: pre-wrap;
+      page-break-inside: avoid;
+    }
+    figure { margin: 4mm 0; page-break-inside: avoid; }
+    figure img { display: block; max-width: 100%; max-height: 225mm; margin: 0 auto; object-fit: contain; }
+    figcaption { margin-top: 2mm; text-align: center; color: #53657a; font-size: 8.5pt; }
+    .landscape-page figure img { max-height: 165mm; }
+    .small { font-size: 8.5pt; color: #5c6d80; }
+    .footer-note { margin-top: 7mm; padding-top: 3mm; border-top: 1px solid #d6e0e9; font-size: 8.5pt; color: #66788c; }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <div class="eyebrow">Dokumentasi Proyek</div>
+    <h1>Data Analytics ReAct Agent untuk Analisis Tren Teknologi Stack Overflow</h1>
+    <div class="subtitle">Google Colab · Gemini API · Google BigQuery · Python</div>
+    <div class="meta">
+      <p><strong>Periode query:</strong> 2020–2025</p>
+      <p><strong>Cakupan data aktual:</strong> 2020–2022</p>
+      <p><strong>Tanggal dokumentasi:</strong> 3 September 2026</p>
+      <p><strong>Nama / Kelas:</strong> ............................................................</p>
+    </div>
+  </section>
+  <div class="hard-break"></div>
+
+  <section>
+    <h2>1. Tujuan dan Dataset</h2>
+    <p>Proyek ini membangun Data Analytics ReAct Agent yang menerima pertanyaan dalam bahasa alami, memilih tindakan analitik, mengambil data Stack Overflow dari BigQuery, lalu menyusun jawaban berdasarkan observation aktual.</p>
+
+    <h3>Tujuan analisis</h3>
+    <ul>
+      <li>Mengidentifikasi tag teknologi dengan jumlah pertanyaan terbanyak.</li>
+      <li>Membandingkan perubahan volume pertanyaan dari tahun ke tahun.</li>
+      <li>Mengukur kualitas respons menggunakan answered rate, accepted-answer rate, rata-rata jawaban, skor, dan view.</li>
+      <li>Menunjukkan pola Reasoning + Acting melalui audit trail yang dapat diperiksa.</li>
+    </ul>
+
+    <h3>Sumber dan grain data</h3>
+    <p>Data berasal dari <code>bigquery-public-data.stackoverflow.posts_questions</code>. Satu baris mewakili satu pertanyaan Stack Overflow. Karena satu pertanyaan dapat memiliki beberapa tag, agregasi antartag tidak bersifat saling eksklusif.</p>
+
+    <div class="callout warning">
+      <strong>Catatan cakupan:</strong> filter query ditetapkan hingga 31 Desember 2025, tetapi hasil aktual hanya mengembalikan 2020–2022. Tahun 2023–2025 tidak diperlakukan sebagai nol dan tidak digunakan untuk menghitung tren.
+    </div>
+
+    <h2 style="margin-top:8mm">2. Arsitektur dan Alur ReAct</h2>
+    <table class="flow-table">
+      <tr>
+        <td>Pertanyaan<br>pengguna</td><td class="arrow">→</td>
+        <td>Gemini<br>memilih action</td><td class="arrow">→</td>
+        <td>Tool tervalidasi<br>+ dry run</td><td class="arrow">→</td>
+        <td>BigQuery<br>observation</td><td class="arrow">→</td>
+        <td>Jawaban<br>berbasis data</td>
+      </tr>
+    </table>
+    <p>Agent hanya memiliki empat tool: <code>get_top_tags</code>, <code>get_tag_trend</code>, <code>compare_tags</code>, dan <code>get_answer_rate</code>. Tool membatasi tahun, nama tag, jumlah hasil, dataset, dan jenis query. Setiap query melewati dry run dan batas 10 GiB.</p>
+  </section>
+
+  <section class="page">
+    <h2>3. Implementasi Utama</h2>
+    <h3>Model dan fallback</h3>
+    <pre>MODEL_CANDIDATES = [
+    "gemini-3.6-flash",
+    "gemini-3.5-flash-lite",
+    "gemini-3.7-flash",
+    "gemini-3.5-flash",
+]</pre>
+    <p>Jika sebuah model menghasilkan 404, 429, 503, atau 504, agent mencoba model berikutnya. Pada eksekusi yang didokumentasikan, Gemini 3.6 Flash sedang tidak tersedia dan proses berhasil diteruskan oleh Gemini 3.5 Flash-Lite.</p>
+
+    <h3>Pengendalian query</h3>
+    <pre>dry_config = bigquery.QueryJobConfig(
+    dry_run=True,
+    use_query_cache=False,
+    query_parameters=query_parameters,
+)
+dry_job = bq_client.query(sql, job_config=dry_config)
+
+if dry_job.total_bytes_processed &gt; MAX_BYTES_BILLED:
+    raise RuntimeError("Query melebihi batas biaya")</pre>
+
+    <h3>Pertanyaan penelitian utama</h3>
+    <div class="callout">Di antara lima tag teknologi dengan jumlah pertanyaan terbanyak di Stack Overflow selama 2020–2025, tag mana yang mengalami kenaikan atau penurunan paling besar, dan bagaimana perbandingan kualitas respons komunitasnya?</div>
+
+    <h3>Audit proses</h3>
+    <p>Prompt utama menghasilkan sembilan event tool. Agent memperoleh lima tag teratas, membandingkan tren, mengukur kualitas respons, lalu memeriksa tren masing-masing tag. Beberapa hasil berstatus <code>cache_hit</code>, sehingga query identik tidak dijalankan ulang.</p>
+    <table>
+      <tr>
+        <td><strong>9</strong><br>action / observation</td>
+        <td><strong>5</strong><br>tag utama</td>
+        <td><strong>10 GiB</strong><br>batas per query</td>
+      </tr>
+    </table>
+    <figure>
+      <img src="evidence/01-konfigurasi-model.png" alt="Konfigurasi model dan BigQuery">
+      <figcaption>Gambar 1. Konfigurasi model fallback, periode, batas biaya, dan dataset.</figcaption>
+    </figure>
+  </section>
+
+  <section class="page">
+    <h2>4. Hasil: Tag Terpopuler</h2>
+    <table>
+      <thead><tr><th>Peringkat</th><th>Tag</th><th class="num">Jumlah pertanyaan</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>python</td><td class="num">750.502</td></tr>
+        <tr><td>2</td><td>javascript</td><td class="num">541.108</td></tr>
+        <tr><td>3</td><td>java</td><td class="num">277.597</td></tr>
+        <tr><td>4</td><td>reactjs</td><td class="num">246.929</td></tr>
+        <tr><td>5</td><td>c#</td><td class="num">211.050</td></tr>
+        <tr><td>6</td><td>html</td><td class="num">205.388</td></tr>
+        <tr><td>7</td><td>android</td><td class="num">176.356</td></tr>
+        <tr><td>8</td><td>r</td><td class="num">152.594</td></tr>
+        <tr><td>9</td><td>php</td><td class="num">150.538</td></tr>
+        <tr><td>10</td><td>node.js</td><td class="num">150.215</td></tr>
+      </tbody>
+    </table>
+    <p>Python menempati peringkat pertama dan memiliki sekitar 1,39 kali jumlah pertanyaan JavaScript. Hasil ini mengukur aktivitas diskusi Stack Overflow, bukan pangsa pasar teknologi.</p>
+    <figure>
+      <img src="evidence/03-top-tags.png" alt="Grafik sepuluh tag terpopuler">
+      <figcaption>Gambar 2. Tabel dan grafik sepuluh tag dengan jumlah pertanyaan terbanyak.</figcaption>
+    </figure>
+  </section>
+
+  <section class="page">
+    <h2>5. Hasil: Tren Tahunan</h2>
+    <table>
+      <thead><tr><th>Tag</th><th class="num">2020</th><th class="num">2021</th><th class="num">2022</th><th class="num">Perubahan 2020–2022</th></tr></thead>
+      <tbody>
+        <tr><td>python</td><td class="num">285.228</td><td class="num">262.585</td><td class="num">202.689</td><td class="num">−28,94%</td></tr>
+        <tr><td>javascript</td><td class="num">214.248</td><td class="num">186.980</td><td class="num">139.880</td><td class="num">−34,71%</td></tr>
+        <tr><td>java</td><td class="num">120.509</td><td class="num">91.898</td><td class="num">65.190</td><td class="num">−45,90%</td></tr>
+        <tr><td>c#</td><td class="num">87.658</td><td class="num">69.226</td><td class="num">54.166</td><td class="num">−38,21%</td></tr>
+        <tr><td>reactjs</td><td class="num">85.310</td><td class="num">85.945</td><td class="num">75.674</td><td class="num">−11,30%</td></tr>
+      </tbody>
+    </table>
+    <ul>
+      <li>Semua tag berakhir lebih rendah pada 2022 dibandingkan 2020.</li>
+      <li>Java mengalami penurunan relatif terbesar, yaitu 45,90%.</li>
+      <li>ReactJS paling stabil: naik 0,74% pada 2021, kemudian turun 11,95% pada 2022.</li>
+      <li>Python mengalami penurunan absolut terbesar, sebanyak 82.539 pertanyaan.</li>
+    </ul>
+    <figure>
+      <img src="evidence/04-tren-heatmap.png" alt="Grafik tren dan heatmap pertumbuhan">
+      <figcaption>Gambar 3. Tren tahunan dan perubahan dari tahun sebelumnya.</figcaption>
+    </figure>
+  </section>
+
+  <section class="page">
+    <h2>6. Hasil: Kualitas Respons Komunitas</h2>
+    <table>
+      <thead><tr><th>Tag</th><th class="num">Answered rate</th><th class="num">Accepted-answer rate</th></tr></thead>
+      <tbody>
+        <tr><td>python</td><td class="num">77,14%</td><td class="num">43,11%</td></tr>
+        <tr><td>javascript</td><td class="num">76,42%</td><td class="num">42,35%</td></tr>
+        <tr><td>reactjs</td><td class="num">74,51%</td><td class="num">38,71%</td></tr>
+        <tr><td>c#</td><td class="num">73,86%</td><td class="num">40,83%</td></tr>
+        <tr><td>java</td><td class="num">72,65%</td><td class="num">36,35%</td></tr>
+      </tbody>
+    </table>
+    <p>Python memiliki answered rate dan accepted-answer rate tertinggi. C# menarik karena accepted-answer rate-nya lebih tinggi daripada ReactJS meskipun answered rate-nya sedikit lebih rendah. Pada hasil detail tiga tag, JavaScript memiliki rata-rata jawaban 1,15, skor 0,45, dan view 435,28; Python memiliki 1,12 jawaban, skor 0,42, dan 413,27 view; Java memiliki 1,03 jawaban, skor 0,41, dan 422,57 view.</p>
+    <figure>
+      <img src="evidence/05-kualitas-respons.png" alt="Grafik kualitas respons">
+      <figcaption>Gambar 4. Answered rate dan accepted-answer rate lima tag utama.</figcaption>
+    </figure>
+  </section>
+
+  <section class="page">
+    <h2>7. Kesimpulan dan Insight</h2>
+    <ol>
+      <li><strong>Python mendominasi volume diskusi</strong> dengan 750.502 pertanyaan, diikuti JavaScript dengan 541.108.</li>
+      <li><strong>Kelima tag utama menurun pada cakupan 2020–2022.</strong> Java turun paling tajam secara relatif (45,90%), sedangkan ReactJS paling stabil (11,30%).</li>
+      <li><strong>Volume tidak sepenuhnya menentukan kualitas respons.</strong> Python memimpin answered dan accepted-answer rate, sementara JavaScript memiliki rata-rata jawaban dan skor tertinggi pada perbandingan tiga tag.</li>
+      <li><strong>Auditability berhasil diterapkan.</strong> Action, parameter, estimasi byte, status, dan jumlah baris tercatat; cache mencegah pengulangan query.</li>
+      <li><strong>Interpretasi harus dibatasi.</strong> Jumlah pertanyaan merefleksikan aktivitas pencarian solusi di Stack Overflow dan tidak dapat langsung dianggap sebagai tingkat adopsi teknologi.</li>
+    </ol>
+
+    <h3>Keterbatasan</h3>
+    <ul>
+      <li>Data tren aktual berhenti pada 2022 walaupun filter berakhir pada 2025.</li>
+      <li>Satu pertanyaan dapat memiliki beberapa tag.</li>
+      <li>Accepted answer dipengaruhi perilaku penanya dalam menandai jawaban.</li>
+      <li>Analisis bersifat deskriptif dan tidak membuktikan hubungan sebab-akibat.</li>
+      <li>Data hanya merepresentasikan Stack Overflow, bukan seluruh ekosistem pengembang.</li>
+    </ul>
+
+    <h3>Pembelajaran</h3>
+    <p>ReAct Agent yang baik tidak hanya menghasilkan teks. Model perlu dibatasi oleh tool yang jelas, input harus divalidasi, biaya query perlu diperiksa sebelum eksekusi, dan setiap kesimpulan harus dapat ditelusuri ke observation. Fallback model dan cache juga diperlukan agar alur tetap stabil ketika layanan LLM sibuk atau kuota terbatas.</p>
+
+    <h3>Validasi</h3>
+    <p>Total Python dari hasil top tags, penjumlahan data tren, dan query kontrol manual seluruhnya sama, yaitu <strong>750.502</strong>. Ini mengonfirmasi konsistensi agregasi utama.</p>
+
+    <h3>Referensi</h3>
+    <ul class="small">
+      <li>Google Cloud BigQuery Public Datasets — cloud.google.com/bigquery/public-data</li>
+      <li>Google Cloud BigQuery Query and Cost Controls — cloud.google.com/bigquery/docs</li>
+      <li>Google AI Gemini Function Calling — ai.google.dev/gemini-api/docs/function-calling</li>
+      <li>Stack Overflow Public Data — stackoverflow.com/help/data-dumps</li>
+    </ul>
+  </section>
+
+  <section class="landscape-page">
+    <h2>Lampiran A — Prompt Utama dan Audit Trail ReAct</h2>
+    <figure>
+      <img src="evidence/02-agent-utama-audit.png" alt="Prompt utama, audit trail, dan jawaban agent">
+      <figcaption>Gambar 5. Gemini 3.5 Flash-Lite menyelesaikan prompt utama dengan sembilan action/observation.</figcaption>
+    </figure>
+  </section>
+
+  <section class="landscape-page">
+    <h2>Lampiran B — Contoh Pertanyaan Interaktif</h2>
+    <figure>
+      <img src="evidence/06-agent-interaktif.png" alt="Pertanyaan interaktif dan jawaban agent">
+      <figcaption>Gambar 6. Perbandingan kualitas respons Python, JavaScript, dan Java melalui mode interaktif.</figcaption>
+    </figure>
+    <div class="footer-note">Sebelum dikumpulkan, isi nama dan kelas pada halaman sampul serta lampirkan tautan notebook Google Colab dan posting LinkedIn pada formulir pengumpulan.</div>
+  </section>
+</body>
+</html>

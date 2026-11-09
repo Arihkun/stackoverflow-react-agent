@@ -1,0 +1,17 @@
+[
+  {
+    "action": "get_answer_rate",
+    "parameters": {
+      "tags": [
+        "python",
+        "javascript",
+        "java"
+      ],
+      "start_year": 2020,
+      "end_year": 2025
+    },
+    "estimated_bytes": 1464231622,
+    "status": "success",
+    "rows": 3
+  }
+]

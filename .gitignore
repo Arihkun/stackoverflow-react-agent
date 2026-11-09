@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# Environment and secrets
+.env
+.env*
+!.env.example
+
+# Temporary profiles and scratch builds
+.chrome-pdf-profile/
+.lo-pdf-profile/
+.lo-pdf-profile-3/
+.pdf-*.png
+*.zip
+LINKEDIN*
+md_package_staging/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
